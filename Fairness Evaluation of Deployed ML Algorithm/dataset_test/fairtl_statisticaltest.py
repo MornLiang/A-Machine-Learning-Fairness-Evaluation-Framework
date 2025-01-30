@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import GaussianNB
 from scipy.stats import shapiro
 from scipy.stats import levene
 from scipy.stats import ttest_ind
@@ -24,7 +25,9 @@ def build_models(seed):
         'KNN': KNeighborsClassifier(),
         'RF': RandomForestClassifier(random_state=seed),
         'DT': DecisionTreeClassifier(random_state=seed),
-        'ANN': MLPClassifier(random_state=seed)
+        'ANN': MLPClassifier(random_state=seed),
+        'NB': GaussianNB()
+
     }
     return models
 
@@ -47,7 +50,7 @@ def calculate_metrics(y_true, y_pred):
 
 
 def run_experiment(kf, models, X_data, y_data, group_label, results_list):
-    for fold, (train_index, test_index) in enumerate(kf.split(X_data)):
+    for fold, (train_index, test_index) in enumerate(kf.split(X_data, y_data)):
         X_train, X_test = X_data[train_index], X_data[test_index]
         y_train, y_test = y_data[train_index], y_data[test_index]
 
